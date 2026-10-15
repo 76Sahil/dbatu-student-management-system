@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DBATU - Dr. Babasaheb Ambedkar Technological University - Student Information Management System">
+  <title>DBATU &bull; Dr. Babasaheb Ambedkar Technological University - SIMS</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="layout-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="brand-crest">🏛️</div>
+          <div class="brand-text">
+            <h2>DBATU</h2>
+            <span>Dr. Babasaheb Ambedkar Technological University</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar-section-label">MAIN MENU</div>
+      <nav class="sidebar-nav">
+        <button type="button" class="nav-item active" data-view="view-overview" id="nav-overview">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Overview &amp; Analytics</span>
+        </button>
+        <button type="button" class="nav-item" data-view="view-students" id="nav-students">
+          <span class="nav-icon">👥</span>
+          <span class="nav-label">Student Directory</span>
+          <span class="nav-badge" id="nav-student-count">0</span>
+        </button>
+        <button type="button" class="nav-item" data-view="view-form" id="nav-form">
+          <span class="nav-icon">➕</span>
+          <span class="nav-label">Enroll New Student</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-section-label">SYSTEM</div>
+      <div class="sidebar-info-box">
+        <div class="info-label">Active Database</div>
+        <div class="info-value">MongoDB Atlas</div>
+        <div class="info-sub">Cluster0 &bull; Sharded Replica</div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-version">
+          <span>SIMS Release v1.2</span>
+          <span class="badge-dot-live"></span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Sidebar Backdrop for Mobile Screens -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Main Workspace -->
+    <div class="workspace">
+      <!-- Top Navigation Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button type="button" class="btn-sidebar-toggle" id="btn-sidebar-toggle" aria-label="Toggle navigation menu">
+            ☰
+          </button>
+          <div class="breadcrumbs">
+            <span class="portal-badge">DBATU Registrar Portal</span>
+            <span class="breadcrumb-separator">/</span>
+            <h1 class="page-title" id="page-title">Executive Overview</h1>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div id="system-status-pill" class="status-pill status-checking">
+            <span class="status-dot"></span>
+            <span id="status-text">Checking System...</span>
+          </div>
+          <div class="admin-profile">
+            <div class="avatar-circle">AD</div>
+            <div class="admin-details">
+              <span class="admin-name">Registrar Office</span>
+              <span class="admin-role">Admin Clearance</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Scrollable Main Workspace Content -->
+      <main class="content-body">
+        <!-- Global Notice / Alert Banner -->
+        <div id="banner-container"></div>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 1: Overview & Analytics Dashboard (Default View) -->
+        <!-- ================================================================= -->
+        <section id="view-overview" class="view-panel active">
+          <!-- Welcome Bar -->
+          <div class="welcome-card">
+            <div class="welcome-text">
+              <h2>Welcome to DBATU Student Management System</h2>
+              <p>Dr. Babasaheb Ambedkar Technological University &bull; Real-time enrollment analytics, department distribution, and student academic records.</p>
+            </div>
+            <div class="welcome-actions">
+              <button type="button" class="btn btn-primary" id="btn-quick-add">
+                <span>➕</span> Enroll New Student
+              </button>
+              <button type="button" class="btn btn-outline" id="btn-quick-view-students">
+                <span>📋</span> View Student Directory
+              </button>
+            </div>
+          </div>
+
+          <!-- KPI Metrics Cards Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon-wrapper bg-blue-subtle">
+                <span class="kpi-icon">🎓</span>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-title">Total Enrolled</span>
+                <div class="kpi-value-group">
+                  <span class="kpi-number" id="kpi-total-students">0</span>
+                  <span class="kpi-tag success">Active Records</span>
+                </div>
+                <span class="kpi-subtext">Verified database records</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-wrapper bg-indigo-subtle">
+                <span class="kpi-icon">🏛️</span>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-title">Departments</span>
+                <div class="kpi-value-group">
+                  <span class="kpi-number" id="kpi-departments-count">0</span>
+                  <span class="kpi-tag neutral">Faculties</span>
+                </div>
+                <span class="kpi-subtext">Engineering &amp; Sciences</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-wrapper bg-emerald-subtle">
+                <span class="kpi-icon">📚</span>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-title">Active Semesters</span>
+                <div class="kpi-value-group">
+                  <span class="kpi-number" id="kpi-semesters-count">0</span>
+                  <span class="kpi-tag info">Tiers 1 - 8</span>
+                </div>
+                <span class="kpi-subtext">Curriculum stages</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon-wrapper bg-amber-subtle">
+                <span class="kpi-icon">⚡</span>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-title">Recent Registrations</span>
+                <div class="kpi-value-group">
+                  <span class="kpi-number" id="kpi-recent-count">0</span>
+                  <span class="kpi-tag warning">Last 7 Days</span>
+                </div>
+                <span class="kpi-subtext">Latest enrollments</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analytics & Breakdown Grid -->
+          <div class="dashboard-analytics-grid">
+            <!-- Department Distribution Breakdown -->
+            <div class="card analytics-card">
+              <div class="card-header">
+                <div>
+                  <h3>Department Distribution</h3>
+                  <p class="card-desc">Proportion of student headcount across academic faculties</p>
+                </div>
+                <span class="badge badge-subtle" id="dept-distribution-badge">0 Departments</span>
+              </div>
+              <div class="card-body">
+                <div id="dept-distribution-bars" class="distribution-bars">
+                  <!-- Dynamically computed and rendered via JS -->
+                </div>
+                <div id="dept-empty-state" class="widget-empty-state" style="display: none;">
+                  <span>No student department distribution data available.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Semester Cohort Distribution -->
+            <div class="card analytics-card">
+              <div class="card-header">
+                <div>
+                  <h3>Semester Cohort Spread</h3>
+                  <p class="card-desc">Student enrollment distributed across academic semesters</p>
+                </div>
+                <span class="badge badge-subtle">Semesters 1 &ndash; 8</span>
+              </div>
+              <div class="card-body">
+                <div id="semester-distribution-chips" class="semester-chips-grid">
+                  <!-- Dynamically computed and rendered via JS -->
+                </div>
+                <div id="semester-empty-state" class="widget-empty-state" style="display: none;">
+                  <span>No semester distribution data available.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recently Enrolled Students Table Preview -->
+          <div class="card recent-students-card">
+            <div class="card-header table-header-flex">
+              <div>
+                <h3>Recently Enrolled Students</h3>
+                <p class="card-desc">Most recently added student records in the registry</p>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline" id="btn-view-all-recent">
+                View Full Directory &rarr;
+              </button>
+            </div>
+            <div class="table-container recent-table-container">
+              <table class="data-table" id="recent-students-table">
+                <thead>
+                  <tr>
+                    <th>Student ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th>Contact</th>
+                    <th class="actions-header">Quick Action</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-students-tbody">
+                  <!-- Dynamically populated via JS -->
+                </tbody>
+              </table>
+              <div id="recent-empty-state" class="empty-state" style="display: none;">
+                <div class="empty-icon">🎓</div>
+                <h4>No Students Registered Yet</h4>
+                <p>Enroll your first student to populate real-time analytics and student directory.</p>
+                <button type="button" class="btn btn-primary btn-sm" id="btn-empty-enroll">
+                  ➕ Enroll First Student
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 2: Student Directory -->
+        <!-- ================================================================= -->
+        <section id="view-students" class="view-panel">
+          <div class="section-top-toolbar">
+            <div>
+              <h2>Student Directory</h2>
+              <p class="section-desc">Search, filter, review, edit, or remove DBATU student records.</p>
+            </div>
+            <div class="top-actions">
+              <button type="button" class="btn btn-secondary btn-icon" id="refresh-btn" title="Refresh student directory">
+                <span>🔄</span> Refresh
+              </button>
+              <button type="button" class="btn btn-primary btn-icon" id="btn-table-add-student">
+                <span>➕</span> Add New Student
+              </button>
+            </div>
+          </div>
+
+          <!-- Search & Filter Controls -->
+          <div class="directory-filter-bar">
+            <div class="search-input-wrapper">
+              <span class="search-icon">🔍</span>
+              <input 
+                type="text" 
+                id="search-input" 
+                placeholder="Search by ID, name, email or department..." 
+                autocomplete="off"
+              >
+              <button type="button" id="clear-search-btn" class="clear-btn" title="Clear search" style="display: none;">✕</button>
+            </div>
+
+            <div class="filter-controls">
+              <select id="filter-department" class="filter-select" aria-label="Filter by department">
+                <option value="">All Departments</option>
+                <option value="Computer Science">Computer Science</option>
+                <option value="Information Technology">Information Technology</option>
+                <option value="Electronics & Communication">Electronics & Communication</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
+                <option value="Civil Engineering">Civil Engineering</option>
+                <option value="Business Administration">Business Administration</option>
+                <option value="Biotechnology">Biotechnology</option>
+                <option value="General Studies">General Studies</option>
+              </select>
+
+              <select id="filter-semester" class="filter-select" aria-label="Filter by semester">
+                <option value="">All Semesters</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
+
+              <button type="button" id="btn-reset-filters" class="btn btn-ghost btn-sm" title="Reset all search filters">
+                Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Student Records Table Container -->
+          <div class="card table-card">
+            <div class="table-container">
+              <div id="table-loading-spinner" class="loading-state" style="display: none;">
+                <div class="spinner"></div>
+                <p>Loading student records from MongoDB Atlas...</p>
+              </div>
+
+              <div id="table-empty-state" class="empty-state" style="display: none;">
+                <div class="empty-icon">📋</div>
+                <h3 id="empty-title">No Students Found</h3>
+                <p id="empty-desc">No student records match your query or the directory is empty.</p>
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-empty-clear-filter" style="display: none;">
+                  Clear Active Filters
+                </button>
+              </div>
+
+              <table id="students-table" class="data-table">
+                <thead>
+                  <tr>
+                    <th>Student ID</th>
+                    <th>Student Profile</th>
+                    <th>Email Address</th>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th>Contact</th>
+                    <th class="actions-header">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="students-table-body">
+                  <!-- Dynamically populated rows -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Table Footer -->
+            <div class="table-footer-bar">
+              <span id="table-record-summary">Showing 0 students</span>
+              <span class="table-db-tag">MongoDB Atlas Verified</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- VIEW 3: Add / Edit Student Form -->
+        <!-- ================================================================= -->
+        <section id="view-form" class="view-panel">
+          <div class="form-container-card card">
+            <div class="card-header form-header-flex">
+              <div>
+                <span id="form-mode-badge" class="badge badge-primary">Create Mode</span>
+                <h2 id="form-heading">Enroll New Student</h2>
+                <p id="form-subheading" class="card-desc">Enter verified academic profile and contact details to register a new student.</p>
+              </div>
+              <button type="button" class="btn btn-ghost" id="btn-form-back-to-directory">
+                &larr; Back to Directory
+              </button>
+            </div>
+
+            <form id="student-form" novalidate>
+              <input type="hidden" id="edit-mongo-id" value="">
+
+              <div class="form-grid-layout">
+                <div class="form-group">
+                  <label for="studentId">Student ID <span class="required">*</span></label>
+                  <div class="input-with-icon">
+                    <span class="input-prefix-icon">🆔</span>
+                    <input 
+                      type="text" 
+                      id="studentId" 
+                      name="studentId" 
+                      placeholder="e.g. STU-2024-001" 
+                      required
+                      autocomplete="off"
+                    >
+                  </div>
+                  <span class="field-error" id="studentId-error"></span>
+                  <span class="field-hint">Must be unique across all DBATU departments.</span>
+                </div>
+
+                <div class="form-group">
+                  <label for="name">Full Legal Name <span class="required">*</span></label>
+                  <div class="input-with-icon">
+                    <span class="input-prefix-icon">👤</span>
+                    <input 
+                      type="text" 
+                      id="name" 
+                      name="name" 
+                      placeholder="e.g. Jane Doe" 
+                      required
+                      autocomplete="name"
+                    >
+                  </div>
+                  <span class="field-error" id="name-error"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="email">Institutional Email Address <span class="required">*</span></label>
+                  <div class="input-with-icon">
+                    <span class="input-prefix-icon">✉️</span>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      name="email" 
+                      placeholder="e.g. student@dbatu.ac.in" 
+                      required
+                      autocomplete="email"
+                    >
+                  </div>
+                  <span class="field-error" id="email-error"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="contact">Primary Contact Phone <span class="required">*</span></label>
+                  <div class="input-with-icon">
+                    <span class="input-prefix-icon">📞</span>
+                    <input 
+                      type="tel" 
+                      id="contact" 
+                      name="contact" 
+                      placeholder="e.g. +1 555-0199 or 9876543210" 
+                      required
+                      autocomplete="tel"
+                    >
+                  </div>
+                  <span class="field-error" id="contact-error"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="department">Academic Department <span class="required">*</span></label>
+                  <select id="department" name="department" required>
+                    <option value="">-- Select Department --</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Information Technology">Information Technology</option>
+                    <option value="Electronics & Communication">Electronics & Communication</option>
+                    <option value="Mechanical Engineering">Mechanical Engineering</option>
+                    <option value="Civil Engineering">Civil Engineering</option>
+                    <option value="Business Administration">Business Administration</option>
+                    <option value="Biotechnology">Biotechnology</option>
+                    <option value="General Studies">General Studies</option>
+                  </select>
+                  <span class="field-error" id="department-error"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="semester">Academic Semester (1 - 8) <span class="required">*</span></label>
+                  <select id="semester" name="semester" required>
+                    <option value="">-- Select Semester --</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
+                  </select>
+                  <span class="field-error" id="semester-error"></span>
+                  <span class="field-hint">Select engineering semester (1 through 8).</span>
+                </div>
+              </div>
+
+              <div class="form-actions-bar">
+                <button type="submit" id="submit-btn" class="btn btn-primary btn-lg">
+                  <span class="btn-text">Enroll Student Record</span>
+                </button>
+                <button type="button" id="cancel-edit-btn" class="btn btn-secondary btn-lg" style="display: none;">
+                  Cancel Edit
+                </button>
+                <button type="button" id="reset-form-btn" class="btn btn-ghost">
+                  Clear Form
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <!-- App Footer -->
+      <footer class="app-footer">
+        <div class="footer-content">
+          <p><strong>DBATU &bull; Dr. Babasaheb Ambedkar Technological University</strong> &bull; Student Information Management System</p>
+          <p class="api-target-info">
+            Backend Endpoint: <code id="active-api-url">http://localhost:5000/api</code>
+          </p>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="modal-backdrop" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-warning-icon">⚠️</div>
+        <h3 id="modal-title">Confirm Deletion</h3>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to permanently delete student <strong id="delete-student-name"></strong> (<span id="delete-student-id"></span>)?</p>
+        <p class="modal-subtext">This action is permanent and will remove the student record directly from MongoDB Atlas.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="modal-cancel-btn" class="btn btn-secondary">Cancel</button>
+        <button type="button" id="modal-confirm-delete-btn" class="btn btn-danger">Yes, Delete Record</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Application Script -->
+  <script src="script.js"></script>
+</body>
+</html>
