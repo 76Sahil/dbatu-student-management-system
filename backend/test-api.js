@@ -90,7 +90,7 @@ const runTests = async () => {
       console.log('  Testing safe 503 fallback behavior:');
       const studentsReq = await request('GET', '/api/students');
       assert(studentsReq.status === 503, 'GET /api/students returns 503 Service Unavailable when DB is down');
-      assert(studentsReq.data.dbStatus === 'disconnected', 'Response correctly flags dbStatus as disconnected');
+      assert(studentsReq.data.dbStatus === 'disconnected' || studentsReq.data.dbStatus === 'connecting', 'Response correctly flags dbStatus as unavailable');
       console.log('  ℹ️  CRUD persistence tests SKIPPED (Awaiting user MONGODB_URI in backend/.env).');
     } else {
       console.log('  ✅ Database is connected! Running live CRUD suite:');

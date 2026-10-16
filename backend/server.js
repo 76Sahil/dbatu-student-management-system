@@ -104,30 +104,60 @@ const sanitizeMongoUri = (uri) => {
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) {
-  console.warn('\n------------------------------------------------------------');
-  console.warn('⚠️  [DATABASE WARNING] MONGODB_URI environment variable is missing.');
-  console.warn('   Student data endpoints will return 503 until a database is connected.');
-  console.warn('   To connect MongoDB Atlas, create backend/.env with MONGODB_URI.');
-  console.warn('------------------------------------------------------------\n');
-} else {
+let isConnecting = false;
+let retryTimer = null;
+
+const connectToDatabase = async () => {
+  if (!MONGODB_URI) {
+    console.warn('\n------------------------------------------------------------');
+    console.warn('⚠️  [DATABASE WARNING] MONGODB_URI environment variable is missing.');
+    console.warn('   Student data endpoints will return 503 until a database is connected.');
+    console.warn('   To connect MongoDB Atlas, configure MONGODB_URI in environment.');
+    console.warn('------------------------------------------------------------\n');
+    return;
+  }
+
+  // Avoid overlapping connection attempts
+  if (mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2 || isConnecting) {
+    return;
+  }
+
+  isConnecting = true;
   console.log(`[Database] Attempting connection to: ${sanitizeMongoUri(MONGODB_URI)}`);
-  mongoose.connect(MONGODB_URI, {
-    serverSelectionTimeoutMS: 5000
-  })
-  .then(() => {
+
+  try {
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 10000
+    });
+    isConnecting = false;
     console.log('✅ [Database] MongoDB connected successfully.');
-  })
-  .catch((err) => {
+  } catch (err) {
+    isConnecting = false;
     console.error('❌ [Database] MongoDB connection failed:', err.message);
-    if (err.message && err.message.includes('alert number 80')) {
-      console.error('💡 [Diagnosis] TLS Alert 80 received from Atlas: Your current public IP is not in the Atlas IP Access List.');
+
+    if (err.message && (err.message.includes('alert number 80') || err.message.includes('not whitelisted') || err.message.includes('Could not connect to any servers'))) {
+      console.error('💡 [Diagnosis] Connection blocked by Atlas IP Access List. Ensure your client or Render outbound IP range is active in MongoDB Atlas Network Access.');
     }
-  });
-}
+
+    // Schedule retry if still disconnected
+    if (mongoose.connection.readyState === 0) {
+      if (retryTimer) clearTimeout(retryTimer);
+      const retryDelay = 10000;
+      console.log(`🔄 [Database] Will automatically retry connection in ${retryDelay / 1000}s...`);
+      retryTimer = setTimeout(connectToDatabase, retryDelay);
+    }
+  }
+};
+
+// Initial connection attempt
+connectToDatabase();
 
 mongoose.connection.on('disconnected', () => {
   console.warn('⚠️  [Database] MongoDB disconnected.');
+  if (mongoose.connection.readyState === 0) {
+    if (retryTimer) clearTimeout(retryTimer);
+    retryTimer = setTimeout(connectToDatabase, 5000);
+  }
 });
 
 mongoose.connection.on('reconnected', () => {
