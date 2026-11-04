@@ -13,9 +13,8 @@
 /**
  * BACKEND API BASE URL CONFIGURATION
  * 
- * Local Development: Defaults to 'http://localhost:5000/api'
- * Production (Render): Uses actual deployed Render backend URL:
- * 'https://dbatu-student-management-system.onrender.com/api'
+ * Production (Render): Defaults to 'https://dbatu-student-management-system.onrender.com/api'
+ * Supports runtime environment injection via window.API_BASE_URL or window.ENV.API_URL
  */
 const RENDER_API_URL = 'https://dbatu-student-management-system.onrender.com/api';
 
@@ -23,9 +22,13 @@ const getApiBaseUrl = () => {
   if (typeof window !== 'undefined' && window.API_BASE_URL) {
     return window.API_BASE_URL;
   }
-  const isLocal = window.location.hostname === 'localhost' || 
-                  window.location.hostname === '127.0.0.1' || 
-                  window.location.protocol === 'file:';
+  if (typeof window !== 'undefined' && window.ENV && window.ENV.API_URL) {
+    return window.ENV.API_URL;
+  }
+  const isLocal = typeof window !== 'undefined' && (
+    window.location.hostname === 'localhost' || 
+    window.location.hostname === '127.0.0.1'
+  );
   
   if (isLocal) {
     return 'http://localhost:5000/api';

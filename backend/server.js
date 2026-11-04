@@ -9,8 +9,8 @@ const PORT = process.env.PORT || 5000;
 // ==========================================
 // 1. CORS Configuration
 // ==========================================
-// Production Netlify frontend fallback URL
-const DEFAULT_PRODUCTION_FRONTEND = 'https://melodious-mandazi-b2bc4f.netlify.app';
+// Default production Vercel frontend URL
+const DEFAULT_PRODUCTION_FRONTEND = 'https://dbatu-student-management-system.vercel.app';
 
 const allowedOrigins = [
   'http://localhost:3000',

@@ -9,7 +9,7 @@ A minimal, robust, and functional Student Information Management System built wi
 - **Frontend**: Semantic HTML5, CSS3, Vanilla JavaScript (ES6+). Zero frameworks or heavy external UI dependencies.
 - **Backend**: Node.js & Express.js.
 - **Database**: MongoDB Atlas with official Mongoose ODM.
-- **Frontend Hosting Target**: Netlify.
+- **Frontend Hosting Target**: Vercel.
 - **Backend Hosting Target**: Render.
 
 ---
@@ -21,7 +21,8 @@ student-management-system/
 ├── frontend/
 │   ├── index.html         # User interface structure and semantic layout
 │   ├── style.css          # Responsive design, theme, modals, and toasts
-│   └── script.js          # API client, validation, state, and DOM handling
+│   ├── script.js          # API client, validation, state, and DOM handling
+│   └── vercel.json        # Vercel security headers configuration
 ├── backend/
 │   ├── server.js          # Express app, Mongoose schemas, routes & CORS
 │   ├── test-api.js        # Automated API test suite and health verification
@@ -30,7 +31,6 @@ student-management-system/
 │   └── .gitignore         # Backend secret and node_modules exclusions
 ├── screenshots/           # Directory for application submission screenshots
 │   └── README.md
-├── netlify.toml           # Netlify build & publish configuration
 ├── .gitignore             # Root repository gitignore
 └── README.md              # Project documentation and setup guide
 ```
@@ -221,47 +221,38 @@ All 6 tests and the live CRUD suite will execute and report `✅ PASS`.
 6. Add **Environment Variables** in Render:
    - `MONGODB_URI`: `<Your MongoDB Atlas connection string>`
    - `NODE_ENV`: `production`
-   - `FRONTEND_URL`: Leave empty initially or set to your Netlify URL once created.
+   - `FRONTEND_URL`: Leave empty initially or set to your Vercel URL once created.
 7. Click **"Deploy Web Service"**.
 8. Once deployed, copy your public Render URL (e.g. `https://student-management-api.onrender.com`).
 9. Test the live health endpoint in your browser: `https://student-management-api.onrender.com/api/health`.
 
-### B. Deploy Frontend to Netlify
+### B. Deploy Frontend to Vercel
 
-1. In `frontend/script.js`, locate the `RENDER_API_URL` constant at the top of the file:
-   ```javascript
-   // Change:
-   const RENDER_API_URL = 'https://REPLACE_WITH_YOUR_RENDER_BACKEND_URL/api';
-
-   // To your actual Render URL:
-   const RENDER_API_URL = 'https://student-management-api.onrender.com/api';
-   ```
-2. Commit and push this change to your repository.
-3. Log in to [Netlify](https://www.netlify.com/).
-4. Click **"Add new site"** -> **"Import an existing project"**.
-5. Connect your GitHub repository.
-6. Build settings:
-   - **Base directory**: Leave blank
-   - **Publish directory**: `frontend` *(already defined in `netlify.toml`)*
-   - **Build command**: Leave blank (static HTML/CSS/JS)
-7. Click **"Deploy site"**.
-8. After deployment, copy your Netlify site URL (e.g., `https://my-student-mgmt.netlify.app`).
+1. Log in to [Vercel](https://vercel.com/).
+2. Click **"Add New..."** -> **"Project"** -> Import `dbatu-student-management-system`.
+3. Configure Project Settings:
+   - **Framework Preset**: Other
+   - **Root Directory**: `frontend`
+   - **Build Command**: None (leave empty)
+   - **Output Directory**: None / `.` (leave empty)
+4. Click **"Deploy"**.
+5. After deployment, copy your Vercel site URL (e.g., `https://dbatu-student-management-system.vercel.app`).
 
 ### C. Finalize CORS Security on Render
 
 1. Return to your Render dashboard -> Your backend service -> **Environment**.
-2. Set `FRONTEND_URL` to your Netlify public URL:
+2. Set `FRONTEND_URL` to your exact Vercel public URL:
    ```env
-   FRONTEND_URL=https://my-student-mgmt.netlify.app
+   FRONTEND_URL=https://dbatu-student-management-system.vercel.app
    ```
-3. Save changes. Render will automatically redeploy with CORS restricted to your Netlify domain.
+3. Save changes. Render will automatically redeploy with CORS restricted to your Vercel domain.
 
 ---
 
 ## 8. Verification & Screenshots
 
 Before submitting your project:
-1. Open your deployed Netlify application.
+1. Open your deployed Vercel application.
 2. Add 2-3 sample students.
 3. Test search by ID and by name.
 4. Test editing a student's semester or contact details.
