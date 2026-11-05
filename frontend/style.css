@@ -624,7 +624,7 @@ body {
 }
 
 .kpi-tag.success { background: var(--success-light); color: var(--success); border: 1px solid var(--success-border); }
-.kpi-tag.teal { background: #f0fdfa; color: #0d9488; border: 1px solid #99f6e4; }
+.kpi-tag.pink { background: #fdf2f8; color: #db2777; border: 1px solid #fbcfe8; }
 .kpi-tag.neutral { background: var(--bg-subtle); color: var(--secondary); border: 1px solid var(--border); }
 .kpi-tag.info { background: var(--info-light); color: var(--info); border: 1px solid var(--info-border); }
 .kpi-tag.warning { background: var(--warning-light); color: var(--warning); border: 1px solid var(--warning-border); }
